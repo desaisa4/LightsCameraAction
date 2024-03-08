@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<!--  The pre tag allows us to maintain the Json format when displaying on the browser-->
+	<p th:text="${titles}" style="color:black">No Movies Playing</p>
+	<ul th:each="title : ${titles}">
+		<li th:text="${title}">title</li>
+	</ul>
+</body>
+</html>
