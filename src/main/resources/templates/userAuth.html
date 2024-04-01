@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>User Authentication</title>
+    <style type="text/css">
+    	.error-msg {
+    		color: red;
+    	}
+    	
+    	.other{
+    		color: green;
+    	}
+    </style>
+  </head>
+  <body>
+    <h1>Lights, Camera, Action!</h1>
+    <h6>Login or Sign up!</h6>
+    <p th:if="${loginError}" class="error">Wrong user or password</p>
+    <form th:action="@{/login}" method="post">
+      <label for="username">Username</label>:
+      <input type="text" id="username" name="username" autofocus="autofocus" /> <br />
+      <label for="password">Password</label>:
+      <input type="password" id="password" name="password" /> <br />
+      <input type="submit" value="Log in" />
+    </form>
+    
+    <form th:action="@{/signup}" method="post" th:object="${userAuthDto}">
+    	<label for="newusername">Username: </label>
+    	<input type="text" id="newusername" name="newusername" autofocus="autofocus" /> <br />
+    	<th:block th:if="${#fields.hasErrors('newusername')}">
+    		<p th:text="${SIGNUP_USERNAME_ERROR}" class="error-msg"></p>
+    		<p th:each="err : ${#fields.errors('newusername')}" th:text="${err}"  class="error-msg"></p>
+    	</th:block>
+    	<p th:if="${accountValidityMessages?.get('usernameMessage')!=null}" th:text="${accountValidityMessages.get('usernameMessage')}" class="other"></p>
+      	<label for="newpassword">Password: </label>
+      	<input type="password" id="newpassword" name="newpassword" /> <br />
+      	<th:block th:if="${#fields.hasErrors('newpassword')}">
+    		<p th:text="${SIGNUP_PASSWORD_ERROR}" class="error-msg"></p>
+    		<p th:each="err : ${#fields.errors('newpassword')}" th:text="${err}"  class="error-msg"></p>
+    	</th:block>
+    	<p th:if="${accountValidityMessages?.get('passwordMessage')!=null}" th:text="${accountValidityMessages.get('passwordMessage')}" class="other"></p>
+      	<label for="newemail">Email: </label>
+      	<input type="email" id="newemail" name="newemail"> <br />
+      	<th:block th:if="${#fields.hasErrors('newemail')}">
+    		<p th:text="${SIGNUP_EMAIL_ERROR}" class="error-msg"></p>
+    		<p th:each="err : ${#fields.errors('newemail')}" th:text="${err}"  class="error-msg"></p>
+    	</th:block>
+    	<p th:if="${accountValidityMessages?.get('emailMessage')!=null}" th:text="${accountValidityMessages.get('emailMessage')}" class="other"></p>
+      	<input type="submit" value="Sign Up" />	
+    </form>
+  </body>
+</html>

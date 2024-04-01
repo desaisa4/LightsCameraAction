@@ -1,4 +1,4 @@
-package com.lca.services.interfaces;
+package com.lca.services;
 
 import java.io.IOException;
 import java.util.List;

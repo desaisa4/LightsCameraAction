@@ -12,7 +12,7 @@ import com.lca.services.AbstractLCAService;
 @Controller
 public class MoviesController {
 	
-	@GetMapping("/nowplaying")
+	@GetMapping("/nowPlaying")
 	public Mono<String> nowPlaying(Model model) {
 		
 		AbstractLCAService msc = new MovieService();
@@ -34,9 +34,5 @@ public class MoviesController {
 					return "nowplaying";			
 		});
 	}
-	
-	public String passToView(Model model) {
-		return "test";
-	}
-	
+
 }
