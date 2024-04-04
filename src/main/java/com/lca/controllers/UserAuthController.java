@@ -1,7 +1,9 @@
 package com.lca.controllers;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import jakarta.validation.Valid;
 import com.lca.DTO.UserAuthDto;
 import com.lca.entities.LCAUser;
+import com.lca.entities.Role;
+import com.lca.entities.RoleRepository;
+import com.lca.entities.UserRepository;
 import com.lca.utils.UserAuthErrors;
 
 /**
@@ -25,6 +30,12 @@ public class UserAuthController {
 	
 	@Autowired
 	UserController userController;
+	
+	@Autowired
+	RoleRepository roleRepository;
+	
+	@Autowired
+	UserRepository userRepository;
 	
 	@GetMapping("/")
 	public String userAuth(Model model) {
@@ -69,20 +80,21 @@ public class UserAuthController {
 			EmailValidity = "Email is taken. Try another one!";
 		}
 		
-		if (!(isUsernameTaken && isEmailTaken)) {
-			//This means that the Username and Email are not already in use. We can now create our new user.
-			userController.addNewUser(userAuthDto);
+		if (!(isUsernameTaken || isEmailTaken)) {
+			LCAUser newUser = new LCAUser();
+			newUser.setUserName(userAuthDto.getNewusername());
+			newUser.setPassword(userAuthDto.getNewpassword());
+			newUser.setEmail(userAuthDto.getNewemail());
+			Role userRole = roleRepository.findByName("USER");
+			newUser.setRoles(Collections.singleton(userRole));
+			userRepository.save(newUser);
 		}
 		
 		accountValidityMessages.put("usernameMessage", UsernameValidity);
 		accountValidityMessages.put("passwordMessage", PasswordValidity);
 		accountValidityMessages.put("emailMessage", EmailValidity);
 		
-		
-		
 		return accountValidityMessages;
-		
-		
 		
 	}
 	
