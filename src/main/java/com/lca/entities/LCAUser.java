@@ -1,9 +1,15 @@
 package com.lca.entities;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -32,7 +38,7 @@ public class LCAUser {
 	@Column
 	private String password;
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 			name = "lca_user_roles",
 			joinColumns = @JoinColumn(

@@ -4,6 +4,7 @@ import java.util.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.lca.entities.LCAUser;
@@ -23,10 +24,13 @@ public class StartupDataInitializer implements CommandLineRunner{
 	@Value("${adminemail}")
 	private String adminEmail;
 	
+	public PasswordEncoder passwordEncoder;
+	
 	@Autowired
-	public StartupDataInitializer(RoleRepository roleRepository, UserRepository userRepository) {
+	public StartupDataInitializer(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
 		this.roleRepository = roleRepository;
 		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	@Override
@@ -52,7 +56,7 @@ public class StartupDataInitializer implements CommandLineRunner{
 		if (userRepository.findByUserName("admin").isEmpty()) {
 			LCAUser admin = new LCAUser();
 			admin.setUserName("admin");
-			admin.setPassword(adminPassword);
+			admin.setPassword(passwordEncoder.encode(adminPassword));
 			admin.setEmail(adminEmail);
 			Role adminRole = roleRepository.findByName("ADMIN");
 			admin.setRoles(Collections.singleton(adminRole));

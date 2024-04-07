@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,6 +38,9 @@ public class UserAuthController {
 	@Autowired
 	UserRepository userRepository;
 	
+	@Autowired
+	PasswordEncoder passwordEncoder;
+	
 	@GetMapping("/")
 	public String userAuth(Model model) {
 		model.addAttribute("userAuthDto", new UserAuthDto());
@@ -53,7 +57,6 @@ public class UserAuthController {
 			Map <String, String> accountValidityMessages = newUserValidityCheck(userAuthDto);
 			model.addAttribute("accountValidityMessages", accountValidityMessages);
 		}
-		
 		
 		return ("userAuth");
 	}
@@ -83,7 +86,9 @@ public class UserAuthController {
 		if (!(isUsernameTaken || isEmailTaken)) {
 			LCAUser newUser = new LCAUser();
 			newUser.setUserName(userAuthDto.getNewusername());
-			newUser.setPassword(userAuthDto.getNewpassword());
+			System.out.println("New User Password: "+userAuthDto.getNewpassword());
+			newUser.setPassword(passwordEncoder.encode(userAuthDto.getNewpassword()));
+//			newUser.setPassword(userAuthDto.getNewpassword());
 			newUser.setEmail(userAuthDto.getNewemail());
 			Role userRole = roleRepository.findByName("USER");
 			newUser.setRoles(Collections.singleton(userRole));
@@ -97,8 +102,4 @@ public class UserAuthController {
 		return accountValidityMessages;
 		
 	}
-	
-	
-	
-	
 }

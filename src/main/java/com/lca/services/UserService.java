@@ -20,18 +20,6 @@ public class UserService {
 		this.userRepository = userRepository;
 	}
 	
-	
-	
-	public boolean createUser(UserAuthDto userAuthDto) {
-		try {
-			userRepository.save(new LCAUser(userAuthDto.getNewusername(), userAuthDto.getNewpassword(), userAuthDto.getNewemail()));
-			return true;
-		}catch(Exception e) {
-			System.out.println("Exception occured while attempting to persist User to the DB. " + e);
-			return false;
-		}
-	}
-	
 	public Iterable<LCAUser> getAllUsers(){
 		return userRepository.findAll();
 	}
